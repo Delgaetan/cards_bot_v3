@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Tournoi en direct</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #121212; color: #f0f0f0; margin: 0; padding: 0; }
+        header { background-color: #1f1f1f; padding: 20px; text-align: center; font-size: 2em; }
+        main { padding: 20px; max-width: 600px; margin: auto; }
+        ul { list-style-type: none; padding: 0; }
+        li { background: #222; padding: 15px; margin-bottom: 10px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <header>Duels du Tournoi</header>
+    <main>
+        <ul id="duels"></ul>
+    </main>
+    <script>
+        const ul = document.getElementById("duels");
+        const ws = new WebSocket("wss://" + location.host + "/ws");
+        ws.onmessage = (event) => {
+            ul.innerHTML = "";
+            const duels = JSON.parse(event.data);
+            for (const duel of duels) {
+                const li = document.createElement("li");
+                li.textContent = `${duel.joueur1} vs ${duel.joueur2} (${duel.etat})`;
+                ul.appendChild(li);
+            }
+        };
+    </script>
+</body>
+</html>
